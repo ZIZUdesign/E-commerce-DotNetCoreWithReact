@@ -31,7 +31,7 @@ export default function ProductDetails() {
   useEffect(() => {
     if (item) setQuantity(item.quantity);
     if (!product) dispatch(fetchProductAsync(parseInt(id)));
-  }, [id, item, dispatch,product]);
+  }, [id, item, dispatch, product]);
 
   function handleInputChange(event: any){
     if (event.target.value >= 0){
@@ -110,7 +110,7 @@ export default function ProductDetails() {
           </Grid>
           <Grid item xs={6}>
             <LoadingButton
-               disabled={item?.quantity === quantity|| !item && quantity === 0}
+               disabled={item?.quantity === quantity || !item && quantity === 0}
                loading={status.includes('pending')}
                onClick={handleUpdateCart}
                sx={{height: '55px'}}

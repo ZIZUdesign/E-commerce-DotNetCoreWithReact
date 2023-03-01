@@ -20,11 +20,10 @@ export default function ProductSearch (){
         fullWidth
         value={searchTerm || ''}
         onChange={(event: any) => {
-            setSearchTerm(event.target.value)
+            setSearchTerm(event.target.value);
             debouncedSearch(event); 
         }}
         >
-
         </TextField>
     )
 }

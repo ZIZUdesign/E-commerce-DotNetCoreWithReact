@@ -14,6 +14,16 @@ export default function ProductCard({ product }: Props) {
     const {status} = useAppSelector(state => state.basket);
     const dispatch = useAppDispatch();
 
+    /*
+       function handleAddItem(productId: number) {
+        setLoading(true);
+        agent.Basket.addItem(productId)
+             .then(basket => dispatch(setBasket(basket)))
+             .catch(error => console.log(error))
+             .finally(() => setLoading(false));
+       }
+    */
+
    
 
     return (
@@ -36,14 +46,14 @@ export default function ProductCard({ product }: Props) {
             />
             <CardContent>
                 <Typography gutterBottom color='secondary' variant="h5">
-                    ${currencyFormat(product.price)}
+                    {currencyFormat(product.price)}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                     {product.brand} / {product.type}
                 </Typography>
             </CardContent>
             <CardActions>
-                <LoadingButton loading={status.includes('pendingAddItem' + product.id)} 
+                <LoadingButton loading={status === 'pendingAddItem' + product.id} 
                   onClick= {() => dispatch(addBasketItemAsync({productId: product.id}))} size="small">
                     Add to cart
                 </LoadingButton>

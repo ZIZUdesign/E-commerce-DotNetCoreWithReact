@@ -1,5 +1,5 @@
 import { Container, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Route, Switch } from "react-router";
 import { ToastContainer } from "react-toastify";
 import AboutPage from "../../features/about/AboutPage";
@@ -12,20 +12,36 @@ import 'react-toastify/dist/ReactToastify.css';
 import ServerError from "../errors/ServerError";
 import NotFound from "../errors/NotFound";
 import BasketPage from "../../features/basket/BasketPage";
-import { getCookie } from "../util/util";
-import agent from "../api/agent";
 import LoadingComponent from "./LoadingComponent";
 import { CheckoutPage } from "../../features/checkout/CheckoutPage";
 import { useAppDispatch } from "../store/configureStore";
-import { setBasket } from "../../features/basket/basketSlice";
+import { fetchBaksetAsync, setBasket } from "../../features/basket/basketSlice";
+import Register from "../../features/account/Register";
+import Login from "../../features/account/Login";
+import { fetchCurrentUser } from "../../features/account/accountSlice";
+import { useEventCallback } from "@material-ui/core";
+import agent from "../api/agent";
+import { getCookie } from "../util/util";
 
 function App() {
   //const {setBasket} = useStoreContext();
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
 
+ // it makes the app to not rendering every time the app loads 
+  const initApp = useCallback (async () => {
+    try {
+      await dispatch(fetchCurrentUser())
+      await dispatch(fetchBaksetAsync());
+    } catch(error){
+      console.log(error);
+    }
+  }, [dispatch])
+
   useEffect(() => {
+    initApp().then(() => setLoading(false));
     const buyerId = getCookie('buyerId');
+    dispatch(fetchCurrentUser());
     if (buyerId){
       agent.Basket.get()
         .then(basket => dispatch(setBasket(basket)))
@@ -34,7 +50,7 @@ function App() {
     } else {
       setLoading(false); 
     }
-  }, [dispatch])
+  },[initApp])
 
   const [darkMode, setDarkMode] = useState(false);
   const paletteType = darkMode ? 'dark' : 'light'
@@ -68,6 +84,9 @@ function App() {
           <Route path='/server-error' component={ServerError} />
           <Route path='/basket' component={BasketPage} />
           <Route path='/checkout' component={CheckoutPage} />
+          <Route path='/login' component={Login} />
+          <Route path='/register' component={Register} />
+
           <Route component={NotFound} />
         </Switch>
       </Container>

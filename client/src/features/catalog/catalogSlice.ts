@@ -84,7 +84,7 @@ export const catalogSlice = createSlice({
         status: 'idle',
         brands: [],
         types: [],
-        productParams: initParams (),
+        productParams: initParams(),
         metaData: null
     }),
     reducers: {
@@ -94,7 +94,7 @@ export const catalogSlice = createSlice({
         },
         setPageNumber: (state, action) => {
            state.productsLoaded = false;
-           state.productParams = {...state.productParams, ...action.payload, pageNumber: 1}
+           state.productParams = {...state.productParams, ...action.payload}
         },
         setMetaData: (state, action) => {
             state.metaData = action.payload;
@@ -122,7 +122,7 @@ export const catalogSlice = createSlice({
             productsAdapater.upsertOne(state, action.payload);
             state.status = 'idle';
         });
-        builder.addCase(fetchProductAsync.rejected, (state, action) => {
+        builder.addCase(fetchProductAsync.rejected, (state) => {
             state.status = 'idle';
         });
         builder.addCase(fetchFilters.pending, (state) => {

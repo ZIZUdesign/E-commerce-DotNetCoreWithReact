@@ -24,7 +24,8 @@ namespace API.Extensions
 
             return query;
 
-      }  
+      } 
+       
 
       public static IQueryable<Product> Search(this IQueryable<Product> query, string searchTerm)
       {
@@ -34,6 +35,7 @@ namespace API.Extensions
 
           return query.Where(p => p.Name.ToLower().Contains(lowerCaseSearchTerm));
       }
+
 
       public static IQueryable<Product> Filter(this IQueryable<Product> query, string brands, string types)
       {

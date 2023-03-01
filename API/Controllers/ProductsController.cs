@@ -57,5 +57,4 @@ namespace API.Controllers
             return Ok(new {brands, types});
 
         }
-    }
-}
+    }}
