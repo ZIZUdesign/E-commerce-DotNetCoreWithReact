@@ -144,15 +144,15 @@ namespace API.Controllers
 
             if (product == null) return NotFound();
 
-            if (!string.IsNullOrEmpty(product.PublicId))
-                await _imageService.DeleteImageAsync(product.PublicId);
+            //if (!string.IsNullOrEmpty(product.PublicId))
+            //    await _imageService.DeleteImageAsync(product.PublicId);
             
 
             _context.Products.Remove(product);
 
             var result = await _context.SaveChangesAsync() > 0;
 
-            if (result) Ok();
+            if (result) return Ok();
 
             return BadRequest(new ProblemDetails{Title = "Problem deleting product"});
 

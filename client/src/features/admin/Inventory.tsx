@@ -15,20 +15,34 @@ import { currencyFormat } from "../../app/util/util";
 import useProducts from "../../app/hooks/useProducts";
 import { useAppDispatch } from "../../app/store/configureStore";
 import AppPagination from "../../app/components/AppPagination";
-import { setPageNumber } from "../catalog/catalogSlice";
+import { removeProduct, setPageNumber } from "../catalog/catalogSlice";
 import { useState } from "react";
 import ProductForm from "./ProductForm";
 import { Product } from "../../app/models/product";
+import agent from "../../app/api/agent";
+import { LoadingButton } from "@material-ui/lab";
 
 export default function Inventory() {
     const { products, metaData } = useProducts();
   const dispatch = useAppDispatch();
   const [editMode, setEditMode] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);
+  const [loading, setLoading] = useState(false);
+  const [target, setTarget] = useState(0);
+
 
   function handleSelectedProduct(product: Product) {
     setSelectedProduct(product);
     setEditMode(true);
+  }
+
+  function handleDeleteProduct(id: number) {
+    setLoading(true);
+    setTarget(id);
+    agent.Admin.deleteProduct(id)
+      .then(() => dispatch(removeProduct(id)))
+      .catch (error => console.log(error))
+      .finally(() => setLoading(false));
   }
 
   function cancelEdit() {
@@ -90,7 +104,12 @@ export default function Inventory() {
                 <TableCell align="center">{product.quantityInStock}</TableCell>
                 <TableCell align="right">
                   <Button onClick={() => handleSelectedProduct(product)} startIcon={<Edit />} />
-                  <Button startIcon={<Delete />} color="error" />
+                  <LoadingButton
+                    onClick={() => handleDeleteProduct(product.id)}
+                    loading={loading && target === product.id}
+                    startIcon={<Delete />}
+                    color="error"
+                  />
                 </TableCell>
               </TableRow>
             ))}
