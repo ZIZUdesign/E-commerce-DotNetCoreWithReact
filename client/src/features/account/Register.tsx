@@ -1,11 +1,12 @@
 import { LoadingButton } from "@material-ui/lab";
-import { Container, Paper, Avatar, Typography, Box, TextField, Grid, Alert, AlertTitle, List, ListItem, ListItemText } from "@mui/material";
+import { Container, Paper, Avatar, Typography, Box, TextField, Grid } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import agent from "../../app/api/agent";
 
 export default function Register(){
+
     const history = useHistory();
 
     const {register, handleSubmit,setError, formState: {isSubmitting, errors, isValid}} = useForm({
@@ -26,7 +27,6 @@ export default function Register(){
         }
     }
   
-
     return (
         <Container component={Paper} maxWidth="sm" 
              sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 4 }}>
@@ -49,6 +49,7 @@ export default function Register(){
                     margin="normal"
                     fullWidth
                     label="Username"
+                    autoFocus
                     {...register('username', { required: 'Username is required' })}
                     error={!!errors.username}
                     helperText={errors?.username?.message}
@@ -107,6 +108,4 @@ export default function Register(){
     
 }
 
-function UseState(arg0: never[]): [any, any] {
-    throw new Error("Function not implemented.");
-}
+

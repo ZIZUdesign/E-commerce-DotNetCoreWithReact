@@ -234,6 +234,7 @@ namespace API.Data
                     Type = "Boots",
                     QuantityInStock = 100
                 },
+                
             };
 
             foreach (var product in products)

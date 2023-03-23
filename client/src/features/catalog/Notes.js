@@ -2,6 +2,37 @@
   This is only Notes 
   --------------------------------
 
+Configuring Cloudinary to your project 
+- need to have an cloudinary accoutn
+- install CloudinaryDotNet from the NuGet gallery 
+- Make sure CloudName, ApiKey and ApiSecret are available 
+- Configure these keys either in appSetting.js or using termial as f.f
+ But inorder to you could able to config the keys from terminal, you need to have 
+ the 'Secret Manger Tool' command so, run the f.f command 
+
+ dotnet user-secrets init 
+
+Then, run the f.f 
+
+dotnet user-secrets set "Cloudinary": "CloudName"
+dotnet user-secrets set "Cloudinary": "ApiKey"
+dotnet user-secrets set "Cloudinary": "ApiSecret"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   Pagination
   ----------
   - evalution of an expression is delayed or deffered 
@@ -75,7 +106,7 @@
             return Ok(new {types, brands});
         }
 
-        fetchFilters: () => 
+        fetchFilters: () =>   sb-ang1.png
 
         CLIENT SIDE 
         -----------------
@@ -91,12 +122,85 @@
             }
         )
 
+        Authentication using JWT 
+        -----------------------------------
+        public class TokenService
+        {
+            public TokenService(UserManager<User> userManager, IConfiguration config)
+            {
+                _userManager = userManager;
+                _config = config;
+            }
+
+            public async Task<string>  GeneerateToken(User user )
+            {
+                token contains three parts 
+                1. Header: Algorithm used to encrypt the password, type of authentication used 
+                2. Body or Payload: roles, claims and expiary date 
+                3. Verification signature 
+
+                -----adding the claims 
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Email, user.Email)
+                    new Claim(ClaimTypes.Name, user.Name)
+
+                    var roles = await _userManager.GetRolesAsync(user);
+                    foreach (var role in roles)
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, role));
+                    }
+                }
+
+                ----SIGNATURE 
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWTSettings:TokenKey"]));
+
+                var creds = new SigningCredentails(key, SecurityAlogorithms.HmacSha512);
+
+                var tokenOptios = new JwtSecurityToken(
+                    issuer: null,
+                    audience: null,
+                    claims: claims,
+                    expires: DateTime.Now.AddDays(7),
+                    signingCredentials: creds
+                )
+
+                return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
+
+            }
+
+
+        }
+
+        This is a note on middleware
+        export default ({dispatch}) => next => action => {
+            if (!action.payload || !action.payload.then){
+                return next(action)
+            }
+
+            if it has a promise 
+            action.payload.then((response) => {
+
+            }){
+
+            }
+        }
+
+        This is all about HIGHER FUNCTIONS 
+        auht.js
+        export default function(state, action){
+            default: return state;
+        }
+
        
     }// END 
 
 
 
 
+NOTES ON GIT and GITHUB
+-----------------------------------------------------------------
 
 
 

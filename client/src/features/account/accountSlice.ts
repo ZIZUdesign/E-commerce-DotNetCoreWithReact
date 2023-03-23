@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { history } from "../..";
 import agent from "../../app/api/agent";
 import { User } from "../../app/models/user";
+import { setBasket } from "../basket/basketSlice";
 
 export interface AccountState {
      user: User | null;
@@ -13,11 +14,14 @@ const initialState: AccountState = {
     user: null
 }
 
-export const signInUser = createAsyncThunk<User, FieldValues>(
+// User -> returned and FieldValues -> arguments
+export const signInUser = createAsyncThunk<User,  FieldValues>(
     'account/signInUser',
     async (data, thunkAPI) => {
         try {
-             const user = await agent.Account.login(data);
+             const userDto = await agent.Account.login(data);
+             const {basket, ...user} = userDto;
+             if (basket) thunkAPI.dispatch(setBasket(basket));
              localStorage.setItem('user', JSON.stringify(user));
              return user; 
         } catch (error: any){
@@ -27,11 +31,13 @@ export const signInUser = createAsyncThunk<User, FieldValues>(
 )
 
 export const fetchCurrentUser = createAsyncThunk<User>(
-    'account/signInUser',
+    'account/fetchCurrentUser',
     async (_, thunkAPI) => {
         thunkAPI.dispatch(setUser(JSON.parse(localStorage.getItem('user')!)));
         try {
-             const user = await agent.Account.currentUser();
+             const userDto = await agent.Account.currentUser();
+             const {basket, ...user} = userDto;
+             if (basket) thunkAPI.dispatch(setBasket(basket));
              localStorage.setItem('user', JSON.stringify(user));
              return user; 
         } catch (error: any){
@@ -41,7 +47,7 @@ export const fetchCurrentUser = createAsyncThunk<User>(
     {
         condition: () => {
             if (!localStorage.getItem('user')) return false;  
-            // only if we have a token we send a request to the API
+            // iff we have a token we send a request to the API
         }
     }
 )
@@ -51,7 +57,7 @@ export const fetchCurrentUser = createAsyncThunk<User>(
 export const accountSlice = createSlice({
     name: 'account',
     initialState,
-    // methods which have nothing to do with the API
+    // methods which have nothing to do with the API, but with the store 
     reducers: {
         signOut: (state) => {
             state.user = null;

@@ -15,13 +15,13 @@ import BasketPage from "../../features/basket/BasketPage";
 import LoadingComponent from "./LoadingComponent";
 import { CheckoutPage } from "../../features/checkout/CheckoutPage";
 import { useAppDispatch } from "../store/configureStore";
-import { fetchBaksetAsync, setBasket } from "../../features/basket/basketSlice";
+import { fetchBasketAsync, setBasket } from "../../features/basket/basketSlice";
 import Register from "../../features/account/Register";
 import Login from "../../features/account/Login";
 import { fetchCurrentUser } from "../../features/account/accountSlice";
-import { useEventCallback } from "@material-ui/core";
 import agent from "../api/agent";
 import { getCookie } from "../util/util";
+import Inventory from "../../features/admin/Inventory";
 
 function App() {
   //const {setBasket} = useStoreContext();
@@ -32,7 +32,7 @@ function App() {
   const initApp = useCallback (async () => {
     try {
       await dispatch(fetchCurrentUser())
-      await dispatch(fetchBaksetAsync());
+      await dispatch(fetchBasketAsync());
     } catch(error){
       console.log(error);
     }
@@ -50,7 +50,7 @@ function App() {
     } else {
       setLoading(false); 
     }
-  },[initApp])
+  },[initApp, dispatch])
 
   const [darkMode, setDarkMode] = useState(false);
   const paletteType = darkMode ? 'dark' : 'light'
@@ -86,6 +86,7 @@ function App() {
           <Route path='/checkout' component={CheckoutPage} />
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register} />
+          <Route path='/inventory' component={Inventory} />
 
           <Route component={NotFound} />
         </Switch>
