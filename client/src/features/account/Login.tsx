@@ -1,12 +1,12 @@
-import { LoadingButton } from "@material-ui/lab";
+import { LoadingButton } from "@mui/lab";
 import { Container, Paper, Avatar, Typography, Box, TextField, Grid } from "@mui/material";
 import { FieldValues, useForm } from "react-hook-form";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../app/store/configureStore";
 import { signInUser } from "./accountSlice";
 
 export default function Login(){
-    const history = useHistory();
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     
     const {register, handleSubmit, formState: {isSubmitting, errors, isValid}} = useForm({
@@ -15,7 +15,7 @@ export default function Login(){
 
     async function submitForm(data: FieldValues){
         await dispatch(signInUser(data));
-        history.push('/catalog');
+        navigate('/catalog');
     }
      
 
@@ -36,7 +36,7 @@ export default function Login(){
                     autoFocus
                     {...register('username', { required: 'Username is required' })}
                     error={!!errors.username}
-                    helperText={errors?.username?.message}
+                    helperText={errors?.username?.message as string}
                 />
                 <TextField
                     margin="normal"
@@ -45,7 +45,7 @@ export default function Login(){
                     type="password"
                     {...register('password', { required: 'Password is required' })}
                     error={!!errors.password}
-                    helperText={errors?.password?.message}
+                    helperText={errors?.password?.message as string}
                 />
                 <LoadingButton
                     disabled={!isValid}

@@ -20,7 +20,7 @@ import { useState } from "react";
 import ProductForm from "./ProductForm";
 import { Product } from "../../app/models/product";
 import agent from "../../app/api/agent";
-import { LoadingButton } from "@material-ui/lab";
+import { LoadingButton } from "@mui/lab";
 
 export default function Inventory() {
     const { products, metaData } = useProducts();

@@ -1,4 +1,4 @@
-import { LoadingButton } from "@material-ui/lab";
+import { LoadingButton } from "@mui/lab";
 import { Add, Delete, Remove } from "@mui/icons-material";
 import {
   Box,
@@ -120,7 +120,7 @@ export default function BasketPage() {
            <BasketSummary /> 
            <Button
             component={Link} 
-            to='/checkout'
+            to='/checkoutWrapper'
             variant='contained'
             size='large'
             fullWidth

@@ -51,7 +51,6 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
             <Typography
               variant="h6"
               component={NavLink}
-              exact
               to="/"
               sx={navStyles}
             >

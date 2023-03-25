@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 
-export function CheckoutPage() {
+export default function CheckoutPage() {
   
   return (
     <Typography variant="h3">
