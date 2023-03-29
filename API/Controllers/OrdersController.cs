@@ -90,17 +90,22 @@ namespace API.Controllers
 
             if (orderDto.SaveAddress)
             {
-                var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
-                user.Address = new UserAddress
+                var user = await _context.Users
+                .Include(a => a.Address)
+                .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+
+                var address  = new UserAddress
                 {
                     FullName = orderDto.ShippingAddress.FullName,
                     Address1= orderDto.ShippingAddress.Address1,  
                     Address2 = orderDto.ShippingAddress.Address2,
                     City = orderDto.ShippingAddress.City,
                     State = orderDto.ShippingAddress.State,
-                    Country = orderDto.ShippingAddress.Country
+                    Country = orderDto.ShippingAddress.Country,
+                    Zip = orderDto.ShippingAddress.Zip
                 };
-                _context.Update(user);
+                user.Address = address;
+                //_context.Update(user); 
             }
 
             var result = await _context.SaveChangesAsync() > 0;

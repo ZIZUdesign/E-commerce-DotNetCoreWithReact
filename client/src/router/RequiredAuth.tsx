@@ -1,4 +1,5 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useAppSelector } from "../app/store/configureStore";
 
 
@@ -12,6 +13,11 @@ export default function RequiredAuth({ roles }: Props) {
 
     if (!user) {
         return <Navigate to='/login' state={ {from: location }} /> 
+    }
+
+    if (roles && !roles.some(r => user.roles?.includes(r))) {
+        toast.error('Not authorised to acces this area');
+        return <Navigate to='/catalog' />
     }
 
     return <Outlet /> 

@@ -1,4 +1,5 @@
 
+using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
 using API.DTOs;
@@ -92,6 +93,20 @@ namespace API.Controllers
                 Token = await _tokenServices.GenerateToken(user),
                 Basket = userBasket?.MapBasketToDto()
             };
+
+        }
+
+        [Authorize]
+        [HttpGet("savedAddress")]
+        public async Task<ActionResult<UserAddress>> GetSavedAddress()
+        {
+            // either Eagerly loading or projection can be used to fetch the saved address
+
+            // projection
+            return await _userManager.Users
+                  .Where(x => x.UserName == User.Identity.Name)
+                  .Select(user => user.Address)
+                  .FirstOrDefaultAsync();
 
         }
 

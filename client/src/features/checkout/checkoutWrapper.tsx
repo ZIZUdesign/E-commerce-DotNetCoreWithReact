@@ -1,5 +1,15 @@
+import { useState } from "react";
+import LoadingComponent from "../../app/layout/LoadingComponent";
+import CheckoutPage from "./CheckoutPage";
+
 export default function CheckoutWrapper() {
-    return (
-        <h1>Check out wraper </h1>
-    )
+  const [loading, setLoading] = useState(true);
+  
+      if (loading)  <LoadingComponent message="Loading checkout" />;
+
+      return (
+        <>
+          <CheckoutPage />
+        </>
+      );
 }

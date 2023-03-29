@@ -9,9 +9,11 @@ import { fetchBasketAsync, setBasket } from "../../features/basket/basketSlice";
 import { fetchCurrentUser } from "../../features/account/accountSlice";
 import agent from "../api/agent";
 import { getCookie } from "../util/util";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+import HomePage from "../../features/home/HomePage";
 
 function App() {
+  const location = useLocation();
   //const {setBasket} = useStoreContext();
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
@@ -55,16 +57,21 @@ function App() {
     setDarkMode(!darkMode);
   }
 
-  if (loading) return <LoadingComponent message='Initialising app...' /> 
 
   return (
     <ThemeProvider theme={theme}>
-      <ToastContainer position='bottom-right' hideProgressBar theme='colored' />
+      <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
       <CssBaseline />
       <Header darkMode={darkMode} handleThemeChange={handleThemeChange} />
-      <Container>
-        <Outlet /> 
-      </Container>
+      {loading ? (
+        <LoadingComponent message="initialising app..." />
+      ) : location.pathname === "/" ? (
+        <HomePage />
+      ) : (
+        <Container>
+          <Outlet />
+        </Container>
+      )}
     </ThemeProvider>
   );
 }
