@@ -13,16 +13,23 @@ export default function Orders() {
 
     useEffect(() => {
         agent.Orders.list()
-            .then(order => setOrders(order))
+            .then(order => {
+                setOrders(order)
+                console.log(order);
+            }
+            )
             .catch((err) => console.log(err))
             .finally(() => setLoading(false));
+        
         
     }, []);
  
     if (loading) return <LoadingComponent message="Loading orders..." /> 
 
     if (selectedOrderNumber > 0) return (
-        <OrderDetailed
+      <OrderDetailed
+        order={orders?.find(o => o.id === selectedOrderNumber)!}
+        setSelectedOrder={setSelectedOrderNumber}
         /> 
     )
 
