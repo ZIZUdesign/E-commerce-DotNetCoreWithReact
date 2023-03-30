@@ -87,6 +87,7 @@ namespace API
                 });
             services.AddAuthorization();
             services.AddScoped<TokenServices>();
+            services.AddScoped<PaymentService>();
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
             services.AddScoped<ImageService>();
         }
