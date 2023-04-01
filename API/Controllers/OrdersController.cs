@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
+    [Authorize]
     public class OrdersController : BaseApiController
     {
         private readonly StoreContext _context;

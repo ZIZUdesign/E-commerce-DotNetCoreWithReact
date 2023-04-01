@@ -29,6 +29,8 @@ namespace API.Controllers
             _context = context;
         }
 
+        
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<BasketDto>> CreateOrUpdatePaymentIntent()
         {

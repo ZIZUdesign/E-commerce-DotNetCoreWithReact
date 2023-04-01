@@ -63,15 +63,13 @@ function App() {
       <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
       <CssBaseline />
       <Header darkMode={darkMode} handleThemeChange={handleThemeChange} />
-      {loading ? (
-        <LoadingComponent message="initialising app..." />
-      ) : location.pathname === "/" ? (
-        <HomePage />
-      ) : (
-        <Container>
-          <Outlet />
-        </Container>
-      )}
+
+      {loading ? <LoadingComponent message="Initialising app..." />
+       : location.pathname === "/" ?  <HomePage />
+       : <Container>
+            <Outlet />
+          </Container>
+      }
     </ThemeProvider>
   );
 }
