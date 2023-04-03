@@ -24,5 +24,5 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context:"{{defaultContext}}:API"
-          push: true
+          push: false
           tags: kahsay/restore:latest
