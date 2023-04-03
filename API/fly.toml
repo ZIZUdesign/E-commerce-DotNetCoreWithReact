@@ -1,0 +1,33 @@
+# fly.toml file generated for nilestore on 2023-04-03T00:48:11+02:00
+
+app = "nilestore"
+kill_signal = "SIGINT"
+kill_timeout = 5
+mounts = []
+primary_region = "ams"
+processes = []
+
+[build]
+  image = "kahsay/restore:latest"
+
+ [env]
+ ASPNETCORE_URLS="http://+:8080" 
+ StripeSettings__PublishableKey="pk_test_51Mr5QLGz06qph8BRpOXBFTWaiV2C73j8ylPTZGj48JO6cQiwR1n6UnG4h7xXR9jQYcj33srFF7BwPtVXoqXT9TyS00T4gx49no"
+
+[[services]]
+  internal_port = 8080
+  processes = ["app"]
+  protocol = "tcp"
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443

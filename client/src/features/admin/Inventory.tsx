@@ -23,7 +23,7 @@ import agent from "../../app/api/agent";
 import { LoadingButton } from "@mui/lab";
 
 export default function Inventory() {
-    const { products, metaData } = useProducts();
+  const { products, metaData } = useProducts();
   const dispatch = useAppDispatch();
   const [editMode, setEditMode] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined);

@@ -1,4 +1,6 @@
 
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 //  Use this method to add services to the container.
@@ -33,10 +35,45 @@ builder.Services.AddSwaggerGen(c =>
                     }
     });
 });
+
+
+string connString;
+if (builder.Environment.IsDevelopment())
+    connString = builder.Configuration.GetConnectionString("DefaultConnection");
+else
+{
+    // Use connection string provided at runtime by FlyIO.
+    var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+    // Parse connection URL to connection string for Npgsql
+    connUrl = connUrl.Replace("postgres://", string.Empty);
+    var pgUserPass = connUrl.Split("@")[0];
+    var pgHostPortDb = connUrl.Split("@")[1];
+    var pgHostPort = pgHostPortDb.Split("/")[0];
+    var pgDb = pgHostPortDb.Split("/")[1];
+    var pgUser = pgUserPass.Split(":")[0];
+    var pgPass = pgUserPass.Split(":")[1];
+    var pgHost = pgHostPort.Split(":")[0];
+    var pgPort = pgHostPort.Split(":")[1];
+    var updatedHost = pgHost.Replace("flycast", "internal");
+
+connString = $"Server={updatedHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
+}
 builder.Services.AddDbContext<StoreContext>(opt =>
 {
-    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+    opt.UseNpgsql(connString);
 });
+
+
+
+
+
+
+
+
+
+
+
 builder.Services.AddCors();
 // These are for .net core identity 
 builder.Services.AddIdentityCore<User>(opt =>
@@ -79,7 +116,7 @@ if (builder.Environment.IsDevelopment())
 }
 
 
-app.UseDefaultFiles(); // finds the index.html
+app.UseDefaultFiles(); // finds the index.html from wwwroot
 app.UseStaticFiles();
 
 app.UseCors(opt =>
@@ -90,7 +127,7 @@ app.UseCors(opt =>
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-app.MapFallbackToController("Index", "fallback", "Fallback");
+app.MapFallbackToController("Index", "Fallback");
 
 using var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<StoreContext>();
@@ -98,8 +135,8 @@ var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 try 
 {
-await context.Database.MigrateAsync();
-DbInitializer.Initialize(context, userManager);
+ await context.Database.MigrateAsync();
+ await DbInitializer.Initialize(context, userManager);
 }
 catch (Exception ex)
 {
